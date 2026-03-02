@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ANTIWORK | Escape the Fiat Mines</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0a0a',
+                            light: '#f4f4f5',
+                            accent: '#39ff14', 
+                            danger: '#ff003c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --cursor-size: 20px;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            cursor: none; 
+        }
+
+        /* Custom Cursor Styling */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            border-radius: 50%;
+            background-color: #39ff14;
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+        }
+        
+        .custom-cursor.hovering {
+            width: 60px;
+            height: 60px;
+            background-color: #ff003c;
+        }
+
+        /* DISABLE CUSTOM CURSOR ON MOBILE/TOUCH DEVICES */
+        @media (hover: none) and (pointer: coarse) {
+            .custom-cursor { display: none !important; }
+            body { cursor: auto; }
+            .brutalist-btn, a, button { cursor: pointer; }
+        }
+
+        /* WebGL Noise Background */
+        #noise-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.05;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: #0a0a0a;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 8vw; /* Scaled up for mobile readability */
+            font-weight: 800;
+            text-transform: uppercase;
+            color: transparent;
+            -webkit-text-stroke: 1px #39ff14;
+        }
+        
+        @media (min-width: 768px) {
+            .loader-text { font-size: 4vw; }
+        }
+
+        /* Marquee Animation */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            background: #39ff14;
+            color: #0a0a0a;
+            padding: 1rem 0;
+            transform: rotate(-2deg);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem; /* Scaled down slightly for mobile */
+        }
+
+        @media (min-width: 768px) {
+            .marquee-content { font-size: 2rem; }
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Brutalist Button Styles */
+        .brutalist-btn {
+            position: relative;
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 2px solid #39ff14;
+            background: transparent;
+            color: #39ff14;
+            transition: all 0.3s ease;
+            cursor: none;
+            overflow: hidden;
+        }
+        
+        .brutalist-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #39ff14;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .brutalist-btn:hover {
+            color: #0a0a0a;
+        }
+
+        .brutalist-btn:hover::before {
+            left: 0;
+        }
+
+        /* Mobile Menu Transitions */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateY(-100%);
+        }
+        #mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        .reveal-text { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
+
+    <div class="custom-cursor" id="cursor"></div>
+
+    <canvas id="noise-canvas"></canvas>
+
+    <div id="preloader">
+        <div class="loader-text text-center px-4">Punching Out...</div>
+        <div class="w-48 md:w-64 h-1 bg-gray-800 mt-8 relative overflow-hidden">
+            <div id="loader-bar" class="absolute top-0 left-0 h-full w-0 bg-brand-accent"></div>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-transparent backdrop-blur-md mix-blend-normal md:mix-blend-difference border-b border-gray-800 md:border-none">
+        <div class="text-2xl font-display font-bold tracking-tighter text-brand-light relative z-50">
+            $ANTIWORK
+        </div>
+        
+        <div class="hidden md:flex gap-6 items-center">
+            <a href="#about" class="nav-link hover:text-brand-accent transition-colors">Manifesto</a>
+            <a href="#tokenomics" class="nav-link hover:text-brand-accent transition-colors">Severance</a>
+            <a href="https://raydium.io" target="_blank" class="brutalist-btn text-sm py-2 px-4">Buy on Raydium</a>
+        </div>
+
+        <button id="mobile-menu-btn" class="md:hidden text-brand-light relative z-50 p-2 focus:outline-none">
+            <svg id="menu-icon" class="w-8 h-8 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center gap-8 md:hidden">
+        <a href="#about" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Manifesto</a>
+        <a href="#tokenomics" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Severance</a>
+        <a href="https://raydium.io" target="_blank" class="brutalist-btn text-lg py-3 px-8 mt-4">Buy on Raydium</a>
+    </div>
+
+    <header class="relative h-screen flex flex-col items-center justify-center overflow-hidden z-10 pt-20">
+        <div id="hero-3d-container" class="absolute inset-0 z-0 flex items-center justify-center opacity-40">
+            <svg width="600" height="600" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="hero-graphic scale-75 md:scale-100">
+                <path fill="#39ff14" d="M45.7,-76.3C58.9,-69.3,69.1,-55.3,77.1,-40.5C85.1,-25.7,90.9,-10.1,89.5,4.8C88.1,19.7,79.5,33.9,70.1,47.2C60.7,60.5,50.5,72.9,37.3,79.9C24.1,86.9,7.9,88.5,-7.1,85.5C-22.1,82.5,-35.9,74.9,-49.2,65.8C-62.5,56.7,-75.3,46.1,-82.4,32C-89.5,17.9,-90.9,0.3,-86.3,-15.5C-81.7,-31.3,-71.1,-45.3,-58.4,-53.4C-45.7,-61.5,-30.9,-63.7,-17.1,-65.5C-3.3,-67.3,9.5,-68.7,23.1,-72.1C36.7,-75.5,51.1,-80.9,45.7,-76.3Z" transform="translate(100 100)" />
+            </svg>
+        </div>
+
+        <div class="relative z-10 text-center px-4 w-full max-w-5xl mx-auto mt-10 md:mt-0">
+            <h1 class="hero-title font-display text-5xl sm:text-7xl md:text-9xl font-extrabold leading-none tracking-tighter uppercase mb-6">
+                <span class="block overflow-hidden"><span class="block translate-y-full hero-text-line">Unemployment</span></span>
+                <span class="block overflow-hidden"><span class="block translate-y-full hero-text-line text-transparent" style="-webkit-text-stroke: 1px #39ff14;">For All</span></span>
+            </h1>
+            <p class="hero-sub font-sans text-lg sm:text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-10 opacity-0 px-2">
+                You weren't born just to pay bills and die. Escape the fiat mines. The ultimate Solana severance package.
+            </p>
+            <div class="hero-actions opacity-0 flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center w-full px-4">
+                <a href="#" class="brutalist-btn text-lg md:text-xl px-6 py-4 w-full sm:w-auto">Submit Notice</a>
+                
+                <div class="flex items-center justify-between border border-gray-700 bg-gray-900/50 backdrop-blur-sm p-2 w-full sm:w-auto">
+                    <code class="text-xs md:text-sm text-brand-accent px-2 md:px-4 font-mono truncate max-w-[150px] md:max-w-none">CA: AntiWork...Solana</code>
+                    <button class="bg-brand-light text-brand-dark px-3 md:px-4 py-2 text-xs md:text-sm font-bold uppercase hover:bg-brand-accent transition-colors nav-link">Copy</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="marquee-container my-10 md:my-20">
+        <div class="marquee-content">
+            QUIT YOUR JOB • BUY $ANTIWORK • FIRE YOUR BOSS • ESCAPE THE MATRIX • UNEMPLOYMENT FOR ALL • QUIT YOUR JOB • BUY $ANTIWORK • FIRE YOUR BOSS • ESCAPE THE MATRIX • UNEMPLOYMENT FOR ALL •
+        </div>
+    </div>
+
+    <section id="about" class="relative overflow-hidden bg-brand-light text-brand-dark py-16 md:py-24">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 items-center">
+                <div class="manifesto-text space-y-6 md:space-y-8 order-2 lg:order-1">
+                    <h2 class="font-display text-4xl sm:text-5xl md:text-7xl font-bold uppercase leading-tight">
+                        We are tired. <br>
+                        <span class="text-brand-danger">We are done.</span>
+                    </h2>
+                    <p class="text-lg md:text-xl leading-relaxed font-sans">
+                        The 9-to-5 is a scam designed to extract your time—your most valuable asset—in exchange for a depreciating currency. $ANTIWORK is more than a memecoin; it's a digital strike fund on the blockchain. 
+                    </p>
+                    <p class="text-lg md:text-xl leading-relaxed font-sans">
+                        No middle managers. No unapproved PTO. Just purely decentralized degeneracy.
+                    </p>
+                </div>
+                
+                <div class="manifesto-image relative h-[300px] md:h-[600px] w-full border-4 border-brand-dark flex items-center justify-center overflow-hidden bg-gray-200 order-1 lg:order-2">
+                    <div class="absolute inset-0 opacity-20" style="background-image: repeating-linear-gradient(45deg, #0a0a0a 25%, transparent 25%, transparent 75%, #0a0a0a 75%, #0a0a0a), repeating-linear-gradient(45deg, #0a0a0a 25%, #f4f4f5 25%, #f4f4f5 75%, #0a0a0a 75%, #0a0a0a); background-position: 0 0, 10px 10px; background-size: 20px 20px;"></div>
+                    <span class="relative z-10 font-display font-bold text-lg md:text-2xl uppercase tracking-widest bg-brand-light px-4 py-2 border-2 border-brand-dark transform -rotate-12 text-center w-3/4">Insert 2D Meme / 3D Asset</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tokenomics" class="relative py-20 md:py-32 bg-brand-dark min-h-screen flex items-center">
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="section-title font-display text-4xl sm:text-6xl md:text-8xl font-bold text-center uppercase mb-16 md:mb-24 text-transparent" style="-webkit-text-stroke: 1px #fff;">The Severance Package</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                <div class="tk-card border border-gray-800 bg-gray-900/40 backdrop-blur-md p-8 md:p-10 transform transition hover:-translate-y-2">
+                    <div class="text-brand-accent font-display text-5xl md:text-6xl font-bold mb-4">0%</div>
+                    <h3 class="text-xl md:text-2xl font-bold uppercase mb-4">Taxes</h3>
+                    <p class="text-gray-400 text-sm md:text-base">Because taxation is just another form of work. Buy, sell, transfer—keep what's yours.</p>
+                </div>
+                
+                <div class="tk-card border border-brand-accent bg-brand-accent/5 backdrop-blur-md p-8 md:p-10 transform transition hover:-translate-y-2 md:translate-y-8">
+                    <div class="text-brand-light font-display text-5xl md:text-6xl font-bold mb-4">100%</div>
+                    <h3 class="text-xl md:text-2xl font-bold uppercase mb-4">LP Burned</h3>
+                    <p class="text-gray-400 text-sm md:text-base">Liquidity pool locked and burned. The ultimate unruggable contract. No managers to pull the plug.</p>
+                </div>
+                
+                <div class="tk-card border border-gray-800 bg-gray-900/40 backdrop-blur-md p-8 md:p-10 transform transition hover:-translate-y-2">
+                    <div class="text-brand-danger font-display text-4xl md:text-6xl font-bold mb-4">Revoked</div>
+                    <h3 class="text-xl md:text-2xl font-bold uppercase mb-4">Mint Auth</h3>
+                    <p class="text-gray-400 text-sm md:text-base">Mint authority revoked. The supply is fixed. The inflation machine is officially broken.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-gray-800 pt-12 md:pt-16 pb-8 text-center px-4">
+        <h2 class="font-display text-2xl md:text-4xl font-bold uppercase mb-8">Ready to clock out?</h2>
+        <div class="flex justify-center gap-4 md:gap-6 mb-10 md:mb-12">
+            <a href="#" class="nav-link w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-600 flex items-center justify-center hover:border-brand-accent hover:text-brand-accent transition-colors">
+                X
+            </a>
+            <a href="#" class="nav-link w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-600 flex items-center justify-center hover:border-brand-accent hover:text-brand-accent transition-colors">
+                TG
+            </a>
+            <a href="#" class="nav-link w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-600 flex items-center justify-center hover:border-brand-accent hover:text-brand-accent transition-colors">
+                Chart
+            </a>
+        </div>
+        <p class="text-gray-600 text-xs md:text-sm font-mono uppercase tracking-widest">
+            © 2026 $ANTIWORK. Not financial advice. Just life advice.
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            if (mobileMenu.classList.contains('open')) {
+                // Transform to X
+                menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
+            } else {
+                // Transform to Hamburger
+                menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+            }
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+            });
+        });
+
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        const links = document.querySelectorAll('a, button, .nav-link');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+
+        // WebGL Noise Background
+        const canvas = document.getElementById('noise-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const renderNoise = () => {
+            const imageData = ctx.createImageData(canvas.width, canvas.height);
+            const buffer32 = new Uint32Array(imageData.data.buffer);
+            const len = buffer32.length;
+            
+            for (let i = 0; i < len; i++) {
+                if (Math.random() < 0.5) {
+                    buffer32[i] = 0xffffffff; 
+                }
+            }
+            
+            ctx.putImageData(imageData, 0, 0);
+            requestAnimationFrame(renderNoise);
+        };
+        renderNoise();
+
+        // Master Animation Timeline
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+
+            tl.to("#loader-bar", {
+                width: "100%",
+                duration: 1.5,
+                ease: "power3.inOut"
+            })
+            .to("#preloader", {
+                yPercent: -100,
+                duration: 1,
+                ease: "power4.inOut"
+            }, "+=0.2")
+            
+            .to(".hero-text-line", {
+                y: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power4.out"
+            }, "-=0.5")
+            .to(".hero-sub", {
+                opacity: 1,
+                y: -10,
+                duration: 1,
+                ease: "power3.out"
+            }, "-=0.5")
+            .to(".hero-actions", {
+                opacity: 1,
+                y: -10,
+                duration: 1,
+                ease: "power3.out"
+            }, "-=0.7")
+            .fromTo(".hero-graphic", {
+                scale: 0.8,
+                rotation: -15,
+                opacity: 0
+            }, {
+                scale: 1,
+                rotation: 0,
+                opacity: 1,
+                duration: 2,
+                ease: "elastic.out(1, 0.3)"
+            }, "-=1.5");
+
+            // Hero Parallax
+            gsap.to("#hero-3d-container", {
+                yPercent: 30, // Reduced for mobile smoothness
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "header",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+
+            // Manifesto Reveal
+            gsap.from(".manifesto-text > *", {
+                y: 30,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: "#about",
+                    start: "top 80%",
+                }
+            });
+
+            gsap.from(".manifesto-image", {
+                scale: 0.9,
+                rotation: 2,
+                opacity: 0,
+                duration: 1.5,
+                ease: "power4.out",
+                scrollTrigger: {
+                    trigger: "#about",
+                    start: "top 70%",
+                }
+            });
+
+            // Tokenomics Cards
+            gsap.from(".tk-card", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "back.out(1.4)",
+                scrollTrigger: {
+                    trigger: "#tokenomics",
+                    start: "top 70%",
+                }
+            });
+        });
+    </script>
+</body>
+</html>

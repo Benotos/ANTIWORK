@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ANTIWORK | The Retirement Plan</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0a0a',
+                            light: '#f4f4f5',
+                            accent: '#39ff14', 
+                            danger: '#ff003c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --cursor-size: 20px; }
+        body {
+            background-color: #0a0a0a;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            border-radius: 50%;
+            background-color: #39ff14;
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+        }
+        .custom-cursor.hovering {
+            width: 60px; height: 60px;
+            background-color: #ff003c;
+        }
+
+        /* DISABLE CUSTOM CURSOR ON MOBILE/TOUCH DEVICES */
+        @media (hover: none) and (pointer: coarse) {
+            .custom-cursor { display: none !important; }
+            body { cursor: auto; }
+            a, button, .roadmap-card { cursor: pointer; }
+        }
+
+        /* Mobile Menu Transitions */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateY(-100%);
+        }
+        #mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* Timeline Base Styles (Desktop) */
+        .timeline-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #1f2937;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #39ff14;
+            box-shadow: 0 0 15px #39ff14;
+        }
+
+        .timeline-item {
+            position: relative;
+            z-index: 10;
+            width: 50%;
+            padding: 2rem 4rem;
+            opacity: 0; 
+        }
+
+        .timeline-item.left { left: 0; text-align: right; }
+        .timeline-item.right { left: 50%; }
+
+        .timeline-node {
+            position: absolute;
+            top: 50%;
+            width: 24px;
+            height: 24px;
+            background: #0a0a0a;
+            border: 4px solid #39ff14;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+        }
+
+        .timeline-item.left .timeline-node { right: -12px; }
+        .timeline-item.right .timeline-node { left: -12px; }
+
+        /* Timeline Mobile Fixes */
+        @media (max-width: 768px) {
+            .timeline-container { padding: 2rem 1rem; }
+            .timeline-line { left: 24px; }
+            .timeline-item {
+                width: 100%;
+                padding: 1rem 1rem 1rem 4rem; 
+            }
+            .timeline-item.left, 
+            .timeline-item.right {
+                left: 0;
+                text-align: left; 
+            }
+            .timeline-node {
+                left: 12px !important; 
+            }
+            .phase-item {
+                margin-top: 2rem !important; 
+            }
+        }
+
+        /* Brutalist Card Style for Roadmap */
+        .roadmap-card {
+            background: #111;
+            border: 2px solid #333;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .roadmap-card { padding: 2rem; }
+        }
+        
+        .roadmap-card:hover {
+            border-color: #39ff14;
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0px #39ff14;
+        }
+
+        /* Image Placeholder */
+        .art-container {
+            width: 100%;
+            height: 150px;
+            background: #1a1a1a;
+            border: 1px dashed #39ff14;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #666;
+            overflow: hidden;
+            position: relative;
+            font-size: 0.875rem;
+        }
+        @media (min-width: 768px) {
+            .art-container { height: 200px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
+
+    <div class="custom-cursor" id="cursor"></div>
+
+    <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-brand-dark/80 backdrop-blur-md mix-blend-normal md:mix-blend-difference border-b border-gray-800 md:border-none">
+        <a href="index.html" class="text-2xl font-display font-bold tracking-tighter text-brand-light relative z-50 nav-link">
+            $ANTIWORK
+        </a>
+        
+        <div class="hidden md:flex gap-6 items-center">
+            <a href="index.html" class="nav-link hover:text-brand-accent transition-colors">Home</a>
+            <a href="roadmap.html" class="nav-link text-brand-accent">Roadmap</a>
+            <a href="breakroom.html" class="nav-link hover:text-brand-accent transition-colors">Breakroom</a>
+        </div>
+
+        <button id="mobile-menu-btn" class="md:hidden text-brand-light relative z-50 p-2 focus:outline-none">
+            <svg id="menu-icon" class="w-8 h-8 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center gap-8 md:hidden">
+        <a href="index.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Home</a>
+        <a href="roadmap.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest text-brand-accent">Roadmap</a>
+        <a href="breakroom.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Breakroom</a>
+    </div>
+
+    <header class="pt-32 md:pt-40 pb-12 md:pb-20 px-4 md:px-6 text-center border-b border-gray-800">
+        <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold uppercase tracking-tighter mb-4 md:mb-6 text-transparent" style="-webkit-text-stroke: 1px #fff;">
+            The Retirement Plan
+        </h1>
+        <p class="font-sans text-base md:text-xl text-gray-400 max-w-2xl mx-auto px-2">
+            Our step-by-step guide to permanently clocking out. We aren't just building a chart; we are building an exit strategy.
+        </p>
+    </header>
+
+    <section class="bg-brand-dark py-12 md:py-20 overflow-hidden">
+        <div class="timeline-container" id="roadmap-timeline">
+            <div class="timeline-line">
+                <div class="timeline-progress" id="progress-line"></div>
+            </div>
+
+            <div class="timeline-item left phase-item mt-0">
+                <div class="timeline-node"></div>
+                <div class="roadmap-card">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-accent mb-1 md:mb-2">Phase 1</h2>
+                    <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">Call in Sick</h3>
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                        <li>• Launch on Raydium</li>
+                        <li>• Burn Liquidity Pool</li>
+                        <li>• Revoke Mint Authority</li>
+                        <li>• Onboard the first 1,000 wagies</li>
+                    </ul>
+                    <div class="art-container px-4">
+                        Drop Phase 1 2D/3D Asset Here
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item right phase-item mt-8 md:mt-24">
+                <div class="timeline-node"></div>
+                <div class="roadmap-card">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-danger mb-1 md:mb-2">Phase 2</h2>
+                    <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">Fire Your Boss</h3>
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                        <li>• DexScreener Trending</li>
+                        <li>• Anti-Work Meme Campaign</li>
+                        <li>• CoinGecko & CMC Listings</li>
+                        <li>• 5,000+ Holders</li>
+                    </ul>
+                    <div class="art-container px-4">
+                        Drop Phase 2 2D/3D Asset Here
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item left phase-item mt-8 md:mt-24">
+                <div class="timeline-node"></div>
+                <div class="roadmap-card">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-light mb-1 md:mb-2">Phase 3</h2>
+                    <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">PTO Forever</h3>
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                        <li>• Tier 1 CEX Listings</li>
+                        <li>• Breakroom DApp Launch</li>
+                        <li>• Real-world Billboard Stunts</li>
+                        <li>• Generational Wealth Attained</li>
+                    </ul>
+                    <div class="art-container px-4">
+                        Drop Phase 3 2D/3D Asset Here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-gray-800 pt-10 md:pt-16 pb-8 text-center bg-brand-dark px-4">
+        <p class="text-gray-600 text-xs md:text-sm font-mono uppercase tracking-widest">
+            © 2026 $ANTIWORK. Stay Unemployed.
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                if (mobileMenu.classList.contains('open')) {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
+                } else {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+                }
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+                });
+            });
+        }
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const links = document.querySelectorAll('a, button, .nav-link, .roadmap-card');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+
+        // Timeline Scroll Animation
+        window.addEventListener('load', () => {
+            // Animate the center line growing downwards
+            gsap.to("#progress-line", {
+                height: "100%",
+                ease: "none",
+                scrollTrigger: {
+                    trigger: "#roadmap-timeline",
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: true
+                }
+            });
+
+            // Animate the cards sliding in
+            const items = gsap.utils.toArray('.phase-item');
+            
+            items.forEach((item, i) => {
+                const isMobile = window.innerWidth < 768;
+                const isLeft = item.classList.contains('left');
+                // On mobile, just slide gently from the right; on desktop, alternate.
+                const xOffset = isMobile ? 50 : (isLeft ? -100 : 100);
+
+                gsap.fromTo(item, 
+                    { 
+                        opacity: 0, 
+                        x: xOffset 
+                    },
+                    {
+                        opacity: 1,
+                        x: 0,
+                        duration: 1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: item,
+                            start: "top 85%", // Triggers slightly earlier to prevent blank spots on mobile scrolling
+                            toggleActions: "play none none reverse"
+                        }
+                    }
+                );
+            });
+        });
+    </script>
+</body>
+</html>

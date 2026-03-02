@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ANTIWORK | The Breakroom</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0a0a',
+                            light: '#f4f4f5',
+                            accent: '#39ff14', 
+                            danger: '#ff003c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --cursor-size: 20px; }
+        body {
+            background-color: #0a0a0a;
+            color: #f4f4f5;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0; left: 0;
+            width: var(--cursor-size);
+            height: var(--cursor-size);
+            border-radius: 50%;
+            background-color: #39ff14;
+            mix-blend-mode: difference;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+        }
+        .custom-cursor.hovering {
+            width: 60px; height: 60px;
+            background-color: #ff003c;
+        }
+
+        /* DISABLE CUSTOM CURSOR ON MOBILE/TOUCH DEVICES */
+        @media (hover: none) and (pointer: coarse) {
+            .custom-cursor { display: none !important; }
+            body { cursor: auto; }
+            .wallet-btn, a, button, .cursor-pointer { cursor: pointer; }
+        }
+
+        /* Brutalist Container */
+        .b-container {
+            border: 2px solid #333;
+            background: #111;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .b-container { padding: 2rem; }
+        }
+
+        .b-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: #39ff14;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .b-container:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Wallet Button */
+        .wallet-btn {
+            background: #512da8; /* Phantom Purple */
+            color: white;
+            padding: 1rem 1.5rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .wallet-btn { padding: 1rem 2rem; width: auto; }
+        }
+
+        .wallet-btn:hover {
+            background: transparent;
+            border-color: #512da8;
+            color: #512da8;
+            box-shadow: 0 0 15px rgba(81, 45, 168, 0.5);
+        }
+
+        /* Mobile Menu Transitions */
+        #mobile-menu {
+            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateY(-100%);
+        }
+        #mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* CRT Scanline Effect for the Watercooler */
+        .crt-screen {
+            background: #050505;
+            border: 1px solid #333;
+            padding: 1rem;
+            height: 250px;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        @media (min-width: 768px) {
+            .crt-screen { height: 300px; }
+        }
+
+        .crt-screen::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
+
+    <div class="custom-cursor" id="cursor"></div>
+
+    <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-brand-dark/80 backdrop-blur-md mix-blend-normal md:mix-blend-difference border-b border-gray-800 md:border-none">
+        <a href="index.html" class="text-2xl font-display font-bold tracking-tighter text-brand-light relative z-50 nav-link">
+            $ANTIWORK
+        </a>
+        
+        <div class="hidden md:flex gap-6 items-center">
+            <a href="index.html" class="nav-link hover:text-brand-accent transition-colors">Home</a>
+            <a href="roadmap.html" class="nav-link hover:text-brand-accent transition-colors">Roadmap</a>
+            <a href="breakroom.html" class="nav-link text-brand-accent">Breakroom</a>
+        </div>
+
+        <button id="mobile-menu-btn" class="md:hidden text-brand-light relative z-50 p-2 focus:outline-none">
+            <svg id="menu-icon" class="w-8 h-8 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center gap-8 md:hidden">
+        <a href="index.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Home</a>
+        <a href="roadmap.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Roadmap</a>
+        <a href="breakroom.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest text-brand-accent">Breakroom</a>
+    </div>
+
+    <header class="pt-32 md:pt-40 pb-10 px-4 text-center">
+        <h1 class="font-display text-4xl md:text-7xl font-extrabold uppercase tracking-tighter mb-4 text-white">
+            The Breakroom
+        </h1>
+        <p class="font-sans text-sm md:text-xl text-brand-accent max-w-2xl mx-auto font-bold tracking-widest uppercase">
+            Management is not allowed in this channel.
+        </p>
+    </header>
+
+    <section class="max-w-7xl mx-auto px-4 md:px-6 pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+        
+        <div class="b-container lg:col-span-1 flex flex-col items-center justify-center text-center py-8 md:py-12 gsap-fade-up">
+            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-dashed border-gray-600 mb-6 flex items-center justify-center bg-gray-900">
+                <span class="text-2xl md:text-3xl">👤</span>
+            </div>
+            <h2 class="font-display text-xl md:text-2xl font-bold uppercase mb-2">Punch In</h2>
+            <p class="text-gray-400 mb-8 font-sans text-xs md:text-sm">Connect your Phantom wallet to verify your $ANTIWORK holdings and access VIP assets.</p>
+            
+            <button class="wallet-btn nav-link">
+                <svg width="20" height="20" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M28.0069 51.5796C28.0069 38.6575 38.3976 28.1818 51.2057 28.1818H62.7214C88.3512 28.1818 109.127 49.0304 109.127 74.75V100C109.127 101.442 108.558 102.825 107.545 103.845C106.533 104.864 105.159 105.437 103.727 105.437C102.835 105.437 101.967 105.215 101.2 104.79C93.7388 100.655 83.1814 100.99 76.1017 105.753C75.3196 106.279 74.4079 106.562 73.4735 106.571C72.5392 106.58 71.621 106.315 70.8268 105.808C63.6335 101.215 53.606 101.127 46.3182 105.589C45.5262 106.074 44.6186 106.326 43.6934 106.316C42.7681 106.307 41.8606 106.035 41.068 105.531C32.1485 99.8829 18.8732 106.402 18.8732 106.402V74.75C18.8732 61.8279 22.9554 51.5796 28.0069 51.5796Z" fill="currentColor"/>
+                    <path d="M54.1457 60.1873C54.1457 63.6937 51.3148 66.5362 47.8182 66.5362C44.3216 66.5362 41.4907 63.6937 41.4907 60.1873C41.4907 56.6809 44.3216 53.8384 47.8182 53.8384C51.3148 53.8384 54.1457 56.6809 54.1457 60.1873Z" fill="white"/>
+                    <path d="M74.8856 60.1873C74.8856 63.6937 72.0547 66.5362 68.5581 66.5362C65.0615 66.5362 62.2306 63.6937 62.2306 60.1873C62.2306 56.6809 65.0615 53.8384 68.5581 53.8384C72.0547 53.8384 74.8856 56.6809 74.8856 60.1873Z" fill="white"/>
+                </svg>
+                Connect Phantom
+            </button>
+        </div>
+
+        <div class="b-container lg:col-span-2 gsap-fade-up" style="transition-delay: 0.1s;">
+            <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end mb-6 border-b border-gray-800 pb-4 gap-2">
+                <h2 class="font-display text-2xl md:text-3xl font-bold uppercase">Asset Library</h2>
+                <span class="text-brand-accent text-xs md:text-sm font-mono">Status: Public</span>
+            </div>
+            
+            <p class="text-gray-400 mb-6 font-sans text-sm md:text-base">Grab official PNGs, logos, and blank text templates to spread the agenda.</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer nav-link group">
+                    <span class="text-3xl md:text-4xl mb-2 opacity-50 group-hover:opacity-100 transition-opacity">🖼️</span>
+                    <span class="text-[10px] md:text-xs font-mono text-gray-500 group-hover:text-brand-accent">Logo.png</span>
+                </div>
+                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer nav-link group">
+                    <span class="text-3xl md:text-4xl mb-2 opacity-50 group-hover:opacity-100 transition-opacity">🎭</span>
+                    <span class="text-[10px] md:text-xs font-mono text-gray-500 group-hover:text-brand-accent">Mascot_2D.png</span>
+                </div>
+                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer nav-link group">
+                    <span class="text-3xl md:text-4xl mb-2 opacity-50 group-hover:opacity-100 transition-opacity">📱</span>
+                    <span class="text-[10px] md:text-xs font-mono text-gray-500 group-hover:text-brand-accent">Text_Template</span>
+                </div>
+                <div class="aspect-square bg-brand-dark border border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer nav-link group">
+                    <span class="text-xl md:text-2xl mb-2 text-brand-accent">+</span>
+                    <span class="text-[10px] md:text-xs font-mono text-brand-accent text-center px-1">Download All .ZIP</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="b-container lg:col-span-3 mt-2 md:mt-4 gsap-fade-up" style="transition-delay: 0.2s;">
+            <h2 class="font-display text-2xl md:text-3xl font-bold uppercase mb-6 flex items-center gap-3 md:gap-4">
+                The Watercooler 
+                <span class="w-2 h-2 md:w-3 md:h-3 bg-brand-danger rounded-full animate-pulse"></span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                <div class="crt-screen font-mono text-xs md:text-sm">
+                    <div class="text-gray-500 mb-4">// LIVE TELEGRAM FEED INTERCEPT</div>
+                    <div class="mb-3"><span class="text-brand-accent">[Wagie_99]:</span> Just handed in my notice. Dumping my final check into $ANTIWORK.</div>
+                    <div class="mb-3"><span class="text-brand-accent">[Based_Intern]:</span> LFG. The chart is looking insane today.</div>
+                    <div class="mb-3"><span class="text-brand-danger">[Admin]:</span> New meme contest live! Drop your best entries in the main chat.</div>
+                    <div class="mb-3"><span class="text-brand-accent">[Chad_Not_At_Work]:</span> Buying the dip. See you at the top.</div>
+                    <div class="mb-3 opacity-50"><span class="text-brand-accent">[User_482]:</span> Gm</div>
+                    <div class="mb-3 opacity-50"><span class="text-brand-accent">[User_911]:</span> Gm</div>
+                </div>
+
+                <div class="flex flex-col justify-center">
+                    <h3 class="font-sans text-lg md:text-xl font-bold mb-3 md:mb-4">Shill to the timeline.</h3>
+                    <p class="text-gray-400 mb-5 md:mb-6 font-sans text-sm md:text-base">Use the hashtag <span class="text-brand-accent font-bold">#AntiWorkSol</span>. Let the algorithms know we are clocking out permanently.</p>
+                    <a href="#" class="border-2 border-white bg-white text-black font-bold uppercase py-3 px-6 text-center hover:bg-brand-accent hover:border-brand-accent transition-colors nav-link w-full md:w-auto text-sm md:text-base">
+                        Post on X
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer class="border-t border-gray-800 pt-6 md:pt-8 pb-8 text-center bg-brand-dark px-4">
+        <p class="text-gray-600 text-xs md:text-sm font-mono uppercase tracking-widest">
+            © 2026 $ANTIWORK. HR cannot save you.
+        </p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (mobileBtn) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                if (mobileMenu.classList.contains('open')) {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
+                } else {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+                }
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('open');
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
+                });
+            });
+        }
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const links = document.querySelectorAll('a, button, .nav-link, .cursor-pointer');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        });
+
+        // Entrance Animations
+        window.addEventListener('load', () => {
+            gsap.from(".gsap-fade-up", {
+                y: 50,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.15,
+                ease: "power3.out"
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const walletBtn = document.querySelector('.wallet-btn');
+            let walletAddress = null;
+
+            const truncateAddress = (address) => {
+                if (!address) return '';
+                return `${address.slice(0, 4)}...${address.slice(-4)}`;
+            };
+
+            const connectWallet = async () => {
+                try {
+                    const { solana } = window;
+
+                    if (solana && solana.isPhantom) {
+                        const response = await solana.connect();
+                        walletAddress = response.publicKey.toString();
+                        
+                        console.log('Successfully connected to wallet:', walletAddress);
+
+                        walletBtn.innerHTML = `
+                            <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
+                            Punched In: ${truncateAddress(walletAddress)}
+                        `;
+                        
+                        walletBtn.style.background = 'transparent';
+                        walletBtn.style.borderColor = '#39ff14';
+                        walletBtn.style.color = '#39ff14';
+                        walletBtn.style.boxShadow = '0 0 15px rgba(57, 255, 20, 0.3)';
+
+                        gsap.to(walletBtn, { scale: 1.05, duration: 0.1, yoyo: true, repeat: 1 });
+
+                    } else {
+                        alert('Please install the Phantom Wallet extension to punch in.');
+                        window.open('https://phantom.app/', '_blank');
+                    }
+                } catch (error) {
+                    console.error('Wallet connection failed:', error.message);
+                    if (error.code === 4001) {
+                        alert('You must punch in to access the breakroom.');
+                    }
+                }
+            };
+
+            if (walletBtn) {
+                walletBtn.addEventListener('click', connectWallet);
+            }
+
+            const checkAutoConnect = async () => {
+                try {
+                    const { solana } = window;
+                    if (solana && solana.isPhantom) {
+                        const response = await solana.connect({ onlyIfTrusted: true });
+                        walletAddress = response.publicKey.toString();
+                        
+                        walletBtn.innerHTML = `
+                            <span class="w-2 h-2 bg-brand-accent rounded-full animate-pulse"></span>
+                            Punched In: ${truncateAddress(walletAddress)}
+                        `;
+                        walletBtn.style.background = 'transparent';
+                        walletBtn.style.borderColor = '#39ff14';
+                        walletBtn.style.color = '#39ff14';
+                    }
+                } catch (error) {
+                    console.log('No prior trusted connection found.');
+                }
+            };
+
+            window.addEventListener('load', checkAutoConnect);
+        });
+    </script>
+</body>
+</html>

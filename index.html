@@ -98,7 +98,7 @@
 
         .loader-text {
             font-family: 'Syne', sans-serif;
-            font-size: 8vw;
+            font-size: 8vw; 
             font-weight: 800;
             text-transform: uppercase;
             color: transparent;
@@ -127,7 +127,7 @@
             animation: marquee 15s linear infinite;
             font-family: 'Syne', sans-serif;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.5rem; 
         }
 
         @media (min-width: 768px) {
@@ -231,10 +231,11 @@
         </div>
 
         <div class="relative z-10 text-center px-4 w-full max-w-5xl mx-auto mt-10 md:mt-0">
-            <h1 class="hero-title font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none tracking-tighter uppercase mb-6 w-full">
-    <span class="block overflow-hidden pb-2"><span class="block translate-y-full hero-text-line">Unemployment</span></span>
-    <span class="block overflow-hidden pb-2"><span class="block translate-y-full hero-text-line text-transparent" style="-webkit-text-stroke: 1px #39ff14;">For All</span></span>
-</h1>
+            <h1 class="hero-title font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-none tracking-tighter uppercase mb-6 w-full px-4">
+                <span class="block overflow-hidden pb-2"><span class="block translate-y-full hero-text-line">Unemployment</span></span>
+                <span class="block overflow-hidden pb-2"><span class="block translate-y-full hero-text-line text-transparent" style="-webkit-text-stroke: 1px #39ff14;">For All</span></span>
+            </h1>
+            
             <p class="hero-sub font-sans text-lg sm:text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto mb-10 opacity-0 px-2">
                 You weren't born just to pay bills and die. Escape the fiat mines. The ultimate Solana severance package.
             </p>
@@ -338,8 +339,10 @@
         mobileBtn.addEventListener('click', () => {
             mobileMenu.classList.toggle('open');
             if (mobileMenu.classList.contains('open')) {
+                // Transform to X
                 menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
             } else {
+                // Transform to Hamburger
                 menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
             }
         });

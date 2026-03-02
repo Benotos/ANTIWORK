@@ -200,7 +200,7 @@
     </div>
 
     <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-transparent backdrop-blur-md mix-blend-normal md:mix-blend-difference border-b border-gray-800 md:border-none">
-        <a href="#" class="flex items-center gap-3 relative z-50 nav-link">
+        <a href="index.html" class="flex items-center gap-3 relative z-50 nav-link">
             <img src="logo.png" alt="Logo" class="h-8 md:h-10 w-auto drop-shadow-[0_0_8px_rgba(57,255,20,0.6)]">
             <div class="text-xl md:text-2xl font-display font-bold tracking-tighter text-brand-light">
                 $ANTIWORK
@@ -208,9 +208,9 @@
         </a>
         
         <div class="hidden md:flex gap-6 items-center">
-            <a href="#about" class="nav-link hover:text-brand-accent transition-colors">Manifesto</a>
-            <a href="#tokenomics" class="nav-link hover:text-brand-accent transition-colors">Severance</a>
-            <a href="#memes" class="nav-link hover:text-brand-accent transition-colors">Propaganda</a>
+            <a href="index.html" class="nav-link text-brand-accent transition-colors">Home</a>
+            <a href="roadmap.html" class="nav-link hover:text-brand-accent transition-colors">Roadmap</a>
+            <a href="breakroom.html" class="nav-link hover:text-brand-accent transition-colors">Breakroom</a>
             <a href="https://raydium.io" target="_blank" class="brutalist-btn text-sm py-2 px-4">Buy on Raydium</a>
         </div>
 
@@ -222,9 +222,9 @@
     </nav>
 
     <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center gap-8 md:hidden">
-        <a href="#about" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Manifesto</a>
-        <a href="#tokenomics" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Severance</a>
-        <a href="#memes" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Propaganda</a>
+        <a href="index.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest text-brand-accent transition-colors">Home</a>
+        <a href="roadmap.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Roadmap</a>
+        <a href="breakroom.html" class="mobile-link font-display text-4xl font-bold uppercase tracking-widest hover:text-brand-accent transition-colors">Breakroom</a>
         <a href="https://raydium.io" target="_blank" class="brutalist-btn text-lg py-3 px-8 mt-4">Buy on Raydium</a>
     </div>
 
@@ -234,7 +234,6 @@
         </div>
 
         <div class="relative z-10 text-center px-2 w-full max-w-6xl mx-auto mt-10 md:mt-0">
-            
             <h1 class="hero-title font-display text-[10vw] sm:text-6xl md:text-8xl lg:text-[8rem] font-extrabold leading-none tracking-tighter uppercase mb-6 w-full flex flex-col items-center">
                 <span class="block opacity-0 translate-y-10 hero-text-line">Unemployment</span>
                 <span class="block opacity-0 translate-y-10 hero-text-line text-transparent" style="-webkit-text-stroke: 1px #39ff14;">For All</span>
@@ -431,7 +430,6 @@
                 ease: "power4.inOut"
             }, "+=0.2")
             
-            // UPDATED TEXT REVEAL: Fades in and floats up instead of cutting through a mask
             .to(".hero-text-line", {
                 y: 0,
                 opacity: 1,
@@ -499,8 +497,6 @@
                     start: "top 70%",
                 }
             });
-
-            // Note: The Tokenomics scroll-trigger animation block was completely deleted here so the cards never hide.
 
             // Propaganda Memes Reveal
             gsap.from(".gsap-meme", {

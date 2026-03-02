@@ -167,27 +167,6 @@
             transform: translateY(-5px);
             box-shadow: 8px 8px 0px #39ff14;
         }
-
-        /* Image Placeholder */
-        .art-container {
-            width: 100%;
-            height: 150px;
-            background: #1a1a1a;
-            border: 1px dashed #39ff14;
-            margin-top: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-family: 'Space Grotesk', sans-serif;
-            color: #666;
-            overflow: hidden;
-            position: relative;
-            font-size: 0.875rem;
-        }
-        @media (min-width: 768px) {
-            .art-container { height: 200px; font-size: 1rem; }
-        }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
@@ -195,8 +174,11 @@
     <div class="custom-cursor" id="cursor"></div>
 
     <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-brand-dark/80 backdrop-blur-md mix-blend-normal md:mix-blend-difference border-b border-gray-800 md:border-none">
-        <a href="index.html" class="text-2xl font-display font-bold tracking-tighter text-brand-light relative z-50 nav-link">
-            $ANTIWORK
+        <a href="index.html" class="flex items-center gap-3 relative z-50 nav-link">
+            <img src="logo.png" alt="Logo" class="h-8 md:h-10 w-auto drop-shadow-[0_0_8px_rgba(57,255,20,0.6)]">
+            <div class="text-xl md:text-2xl font-display font-bold tracking-tighter text-brand-light">
+                $ANTIWORK
+            </div>
         </a>
         
         <div class="hidden md:flex gap-6 items-center">
@@ -235,51 +217,51 @@
 
             <div class="timeline-item left phase-item mt-0">
                 <div class="timeline-node"></div>
-                <div class="roadmap-card">
+                <div class="roadmap-card group">
                     <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-accent mb-1 md:mb-2">Phase 1</h2>
                     <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">Call in Sick</h3>
-                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg mb-6">
                         <li>• Launch on Raydium</li>
                         <li>• Burn Liquidity Pool</li>
                         <li>• Revoke Mint Authority</li>
                         <li>• Onboard the first 1,000 wagies</li>
                     </ul>
-                    <div class="art-container px-4">
-                        Drop Phase 1 2D/3D Asset Here
+                    <div class="border border-gray-800 bg-black p-2 transform group-hover:-rotate-2 transition-transform duration-300">
+                        <img src="meme3.webp" alt="Phase 1 Propaganda" class="w-full h-auto object-cover border border-gray-800">
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item right phase-item mt-8 md:mt-24">
                 <div class="timeline-node"></div>
-                <div class="roadmap-card">
+                <div class="roadmap-card group">
                     <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-danger mb-1 md:mb-2">Phase 2</h2>
                     <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">Fire Your Boss</h3>
-                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg mb-6">
                         <li>• DexScreener Trending</li>
                         <li>• Anti-Work Meme Campaign</li>
                         <li>• CoinGecko & CMC Listings</li>
                         <li>• 5,000+ Holders</li>
                     </ul>
-                    <div class="art-container px-4">
-                        Drop Phase 2 2D/3D Asset Here
+                    <div class="border border-gray-800 bg-black p-2 transform group-hover:rotate-2 transition-transform duration-300">
+                        <img src="meme4.webp" alt="Phase 2 Propaganda" class="w-full h-auto object-cover border border-gray-800">
                     </div>
                 </div>
             </div>
 
             <div class="timeline-item left phase-item mt-8 md:mt-24">
                 <div class="timeline-node"></div>
-                <div class="roadmap-card">
+                <div class="roadmap-card group">
                     <h2 class="font-display text-3xl md:text-4xl font-bold text-brand-light mb-1 md:mb-2">Phase 3</h2>
                     <h3 class="font-sans text-xl md:text-2xl font-bold uppercase mb-4 text-white">PTO Forever</h3>
-                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg">
+                    <ul class="font-sans text-gray-400 space-y-2 text-sm md:text-lg mb-6">
                         <li>• Tier 1 CEX Listings</li>
                         <li>• Breakroom DApp Launch</li>
                         <li>• Real-world Billboard Stunts</li>
                         <li>• Generational Wealth Attained</li>
                     </ul>
-                    <div class="art-container px-4">
-                        Drop Phase 3 2D/3D Asset Here
+                    <div class="border border-gray-800 bg-black p-2 transform group-hover:-rotate-1 transition-transform duration-300">
+                        <img src="meme5.webp" alt="Phase 3 Propaganda" class="w-full h-auto object-cover border border-gray-800">
                     </div>
                 </div>
             </div>

@@ -190,9 +190,9 @@
                 <a href="#" class="brutalist-btn text-lg md:text-xl px-6 py-4 w-full sm:w-auto">Submit Notice</a>
                 
                 <div class="flex items-center justify-between border border-gray-700 bg-gray-900/50 backdrop-blur-sm p-2 w-full sm:w-auto">
-                    <code class="text-xs md:text-sm text-brand-accent px-2 md:px-4 font-mono truncate max-w-[150px] md:max-w-none">CA: AntiWork...Solana</code>
-                    <button class="bg-brand-light text-brand-dark px-3 md:px-4 py-2 text-xs md:text-sm font-bold uppercase hover:bg-brand-accent transition-colors nav-link">Copy</button>
-                </div>
+    <code class="text-xs md:text-sm text-brand-accent px-2 md:px-4 font-mono truncate max-w-[150px] md:max-w-none">CA: AntiWork...Solana</code>
+    <button id="copy-ca-btn" data-ca="YOUR_ACTUAL_SOLANA_ADDRESS_HERE" class="bg-brand-light text-brand-dark w-24 py-2 text-xs md:text-sm font-bold uppercase hover:bg-brand-accent transition-colors nav-link text-center">Copy</button>
+</div>
             </div>
         </div>
     </header>
@@ -457,5 +457,42 @@
             });
         });
     </script>
+
+    <script>
+    // Copy to Clipboard Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const copyBtn = document.getElementById('copy-ca-btn');
+        
+        if (copyBtn) {
+            copyBtn.addEventListener('click', async (e) => {
+                e.preventDefault(); // Prevent page jump
+                
+                // Grab the contract address from the button's data attribute
+                const contractAddress = copyBtn.getAttribute('data-ca');
+                
+                try {
+                    // Write to clipboard
+                    await navigator.clipboard.writeText(contractAddress);
+                    
+                    // Visual feedback: Change text and color
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = 'COPIED!';
+                    copyBtn.classList.replace('bg-brand-light', 'bg-brand-accent');
+                    
+                    // Reset back to normal after 2 seconds
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                        copyBtn.classList.replace('bg-brand-accent', 'bg-brand-light');
+                    }, 2000);
+                    
+                } catch (err) {
+                    console.error('Failed to copy CA: ', err);
+                    copyBtn.innerText = 'ERROR';
+                    setTimeout(() => copyBtn.innerText = 'COPY', 2000);
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

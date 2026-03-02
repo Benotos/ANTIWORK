@@ -20,10 +20,20 @@
                     },
                     colors: {
                         brand: {
-                            dark: '#0a0a0a',
+                            dark: '#050505',
                             light: '#f4f4f5',
                             accent: '#39ff14', 
                             danger: '#ff003c'
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         }
                     }
                 }
@@ -34,13 +44,12 @@
     <style>
         :root { --cursor-size: 20px; }
         body {
-            background-color: #0a0a0a;
+            background-color: #050505;
             color: #f4f4f5;
             overflow-x: hidden;
             cursor: none;
         }
 
-        /* Custom Cursor */
         .custom-cursor {
             position: fixed;
             top: 0; left: 0;
@@ -54,187 +63,166 @@
             transform: translate(-50%, -50%);
             transition: width 0.2s, height 0.2s;
         }
-        .custom-cursor.hovering {
-            width: 60px; height: 60px;
-            background-color: #ff003c;
-        }
+        .custom-cursor.hovering { width: 60px; height: 60px; background-color: #ff003c; }
 
-        /* DISABLE CUSTOM CURSOR ON MOBILE/TOUCH DEVICES */
         @media (hover: none) and (pointer: coarse) {
             .custom-cursor { display: none !important; }
             body { cursor: auto; }
-            .brutalist-btn, a, button, .cursor-pointer { cursor: pointer; }
         }
 
-        /* Brutalist Container */
+        /* Complex Brutalist Containers */
         .b-container {
-            border: 2px solid #333;
-            background: #111;
-            padding: 1.5rem;
+            border: 1px solid #222;
+            background: rgba(10, 10, 10, 0.8);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        @media (min-width: 768px) {
-            .b-container { padding: 2rem; }
-        }
-
-        .b-container::before {
-            content: '';
+        .b-container::after {
+            content: "SECURE_CONN_0.42";
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: #39ff14;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.3s ease;
+            top: 5px; right: 8px;
+            font-family: monospace;
+            font-size: 8px;
+            color: #333;
         }
 
-        .b-container:hover::before {
-            transform: scaleX(1);
-        }
+        .gsap-fade-up { opacity: 0; } /* Prevents flash of unstyled content */
 
-        /* Mobile Menu Transitions */
-        #mobile-menu {
-            transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
-            transform: translateY(-100%);
-        }
-        #mobile-menu.open {
-            transform: translateY(0);
-        }
-
-        /* CRT Scanline Effect */
-        .crt-screen {
-            background: #050505;
-            border: 1px solid #333;
-            padding: 1rem;
-            height: 250px;
-            overflow-y: auto;
+        /* CRT FX */
+        .crt-overlay {
             position: relative;
+            background: #080808;
         }
-        
-        @media (min-width: 768px) {
-            .crt-screen { height: 300px; }
-        }
-
-        .crt-screen::after {
+        .crt-overlay::before {
             content: " ";
             display: block;
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             z-index: 2;
-            background-size: 100% 2px, 3px 100%;
+            background-size: 100% 3px, 3px 100%;
             pointer-events: none;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #39ff14; }
+        .stat-value { font-family: 'Syne', sans-serif; font-weight: 800; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
 
     <div class="custom-cursor" id="cursor"></div>
 
-    <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50 bg-brand-dark/90 md:bg-brand-dark/80 backdrop-blur-md border-b border-gray-800 md:border-none">
-        <a href="index.html" class="flex items-center gap-3 relative z-50 nav-link">
-            <img src="logo.png" alt="Logo" class="h-8 md:h-10 w-auto">
-            <div class="text-xl md:text-2xl font-display font-bold tracking-tighter text-brand-light">
-                $ANTIWORK
-            </div>
+    <div class="fixed top-0 left-0 w-full bg-brand-accent text-brand-dark py-1 z-[60] overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase font-bold border-b border-black">
+        <div class="inline-block animate-marquee">
+            SYSTEM STATUS: OPERATIONAL / $ANTIWORK HOLDERS INCREASING / QUITTING JOBS IN PROGRESS / BUY THE DIP / NOT FINANCIAL ADVICE / HR IS NOT YOUR FRIEND / BULLISH ON UNEMPLOYMENT / 
+            SYSTEM STATUS: OPERATIONAL / $ANTIWORK HOLDERS INCREASING / QUITTING JOBS IN PROGRESS / BUY THE DIP / NOT FINANCIAL ADVICE / HR IS NOT YOUR FRIEND / BULLISH ON UNEMPLOYMENT / 
+        </div>
+    </div>
+
+    <nav class="fixed top-6 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50">
+        <a href="index.html" class="flex items-center gap-3 nav-link bg-black/50 p-2 backdrop-blur-md border border-white/10">
+            <div class="text-xl font-display font-bold tracking-tighter text-brand-light">$ANTIWORK</div>
         </a>
-        
-        <div class="hidden md:flex gap-6 items-center">
+        <div class="hidden md:flex gap-6 items-center bg-black/50 p-3 backdrop-blur-md border border-white/10">
             <a href="index.html" class="nav-link hover:text-brand-accent transition-colors">Home</a>
             <a href="roadmap.html" class="nav-link hover:text-brand-accent transition-colors">Roadmap</a>
             <a href="breakroom.html" class="nav-link text-brand-accent">Breakroom</a>
         </div>
-
-        <button id="mobile-menu-btn" class="md:hidden text-brand-light relative z-50 p-2">
-            <svg id="menu-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-        </button>
     </nav>
 
-    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center gap-8 md:hidden">
-        <a href="index.html" class="mobile-link font-display text-4xl font-bold uppercase text-white">Home</a>
-        <a href="roadmap.html" class="mobile-link font-display text-4xl font-bold uppercase text-white">Roadmap</a>
-        <a href="breakroom.html" class="mobile-link font-display text-4xl font-bold uppercase text-brand-accent">Breakroom</a>
-    </div>
-
-    <header class="pt-32 md:pt-40 pb-10 px-4 text-center">
-        <h1 class="font-display text-4xl md:text-7xl font-extrabold uppercase tracking-tighter mb-4 text-white">
-            The Breakroom
+    <header class="pt-40 pb-12 px-4 text-center">
+        <h1 class="font-display text-5xl md:text-8xl font-black uppercase tracking-tighter mb-4 text-white italic">
+            THE TERMINAL
         </h1>
-        <p class="font-sans text-sm md:text-xl text-brand-accent max-w-2xl mx-auto font-bold tracking-widest uppercase">
-            Accessible to all. HR is still banned.
-        </p>
+        <div class="flex items-center justify-center gap-4">
+            <div class="h-[1px] w-12 bg-brand-accent"></div>
+            <p class="font-mono text-xs md:text-sm text-brand-accent uppercase tracking-[0.3em]">Authorized Access Only</p>
+            <div class="h-[1px] w-12 bg-brand-accent"></div>
+        </div>
     </header>
 
-    <section class="max-w-7xl mx-auto px-4 md:px-6 pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+    <section class="max-w-7xl mx-auto px-4 md:px-6 pb-24 grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <div class="b-container lg:col-span-1 flex flex-col items-center justify-center text-center py-8 md:py-12 gsap-fade-up">
-            <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-brand-accent mb-6 flex items-center justify-center bg-gray-900 shadow-[0_0_15px_rgba(57,255,20,0.2)]">
-                <span class="text-2xl md:text-3xl">🔥</span>
+        <div class="lg:col-span-1 space-y-4">
+            <div class="b-container p-6 gsap-fade-up">
+                <p class="text-[10px] font-mono text-gray-500 mb-1 uppercase">Burn Rate</p>
+                <p class="text-2xl stat-value text-brand-danger">42.0%</p>
+                <div class="w-full bg-gray-900 h-1 mt-2">
+                    <div class="bg-brand-danger h-full w-[42%]"></div>
+                </div>
             </div>
-            <h2 class="font-display text-xl md:text-2xl font-bold uppercase mb-2">Notice Period</h2>
-            <p class="text-gray-400 mb-8 font-sans text-xs md:text-sm">Public terminal active. Join the ranks of the officially unemployed.</p>
-            
-            <a href="https://t.me/yourlink" target="_blank" class="w-full bg-brand-accent text-brand-dark font-display font-bold py-4 px-6 uppercase tracking-wider hover:bg-white transition-colors text-center">
-                Join the Strike
-            </a>
-        </div>
-
-        <div class="b-container lg:col-span-2 gsap-fade-up" style="transition-delay: 0.1s;">
-            <div class="flex flex-col sm:flex-row sm:justify-between items-start sm:items-end mb-6 border-b border-gray-800 pb-4 gap-2">
-                <h2 class="font-display text-2xl md:text-3xl font-bold uppercase">Propaganda Kit</h2>
-                <span class="text-brand-accent text-xs md:text-sm font-mono animate-pulse">● LIVE ACCESS</span>
+            <div class="b-container p-6 gsap-fade-up">
+                <p class="text-[10px] font-mono text-gray-500 mb-1 uppercase">Market Sentiment</p>
+                <p class="text-2xl stat-value text-brand-accent">EXTREME BULLISH</p>
             </div>
-            
-            <p class="text-gray-400 mb-6 font-sans text-sm md:text-base">Download the official $ANTIWORK assets. No permission required.</p>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer group p-2">
-                    <img src="logo.png" alt="Logo" class="w-12 h-12 md:w-16 md:h-16 object-contain mb-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                    <span class="text-[10px] md:text-xs font-mono text-gray-500">Logo.png</span>
-                </div>
-                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer group p-2">
-                    <img src="meme2.webp" alt="Mascot" class="w-12 h-12 md:w-16 md:h-16 object-cover rounded-sm mb-2 opacity-50 group-hover:opacity-100 transition-opacity">
-                    <span class="text-[10px] md:text-xs font-mono text-gray-500">Mascot.webp</span>
-                </div>
-                <div class="aspect-square bg-gray-900 border border-gray-700 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer group">
-                    <span class="text-3xl md:text-4xl mb-2 opacity-50 group-hover:opacity-100">📁</span>
-                    <span class="text-[10px] md:text-xs font-mono text-gray-500">Templates</span>
-                </div>
-                <div class="aspect-square bg-brand-dark border border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-brand-accent transition-colors cursor-pointer group">
-                    <span class="text-xl md:text-2xl mb-2 text-brand-accent">↓</span>
-                    <span class="text-[10px] md:text-xs font-mono text-brand-accent">Full .ZIP</span>
+            <div class="b-container p-6 gsap-fade-up">
+                <h3 class="font-display font-bold uppercase mb-4 text-sm">System Logs</h3>
+                <div class="font-mono text-[9px] text-gray-500 space-y-1">
+                    <p>> User_882 disconnected from Slack</p>
+                    <p>> Manager call ignored</p>
+                    <p class="text-brand-accent">> Buy order filled @ 0.000...42</p>
+                    <p>> Desk cleared successfully</p>
                 </div>
             </div>
         </div>
 
-        <div class="b-container lg:col-span-3 mt-2 md:mt-4 gsap-fade-up" style="transition-delay: 0.2s;">
-            <h2 class="font-display text-2xl md:text-3xl font-bold uppercase mb-6 flex items-center gap-3 md:gap-4">
-                The Watercooler 
-                <span class="w-2 h-2 md:w-3 md:h-3 bg-brand-accent rounded-full animate-pulse"></span>
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                <div class="crt-screen font-mono text-xs md:text-sm">
-                    <div class="text-gray-500 mb-4">// BROADCASTING TO ALL TERMINALS...</div>
-                    <div class="mb-3"><span class="text-brand-accent">[Wagie_99]:</span> Just handed in my notice. Dumping check into $ANTIWORK.</div>
-                    <div class="mb-3"><span class="text-brand-accent">[Based_Intern]:</span> Freedom feels good. No more Zoom calls.</div>
-                    <div class="mb-3"><span class="text-brand-danger">[Admin]:</span> New meme contest live! Entry is open to everyone.</div>
-                    <div class="mb-3"><span class="text-brand-accent">[Chad_Not_At_Work]:</span> Chart is bullish. Boss is calling, I'm ignoring.</div>
+        <div class="b-container lg:col-span-3 p-6 md:p-8 crt-overlay gsap-fade-up" style="transition-delay: 0.1s;">
+            <div class="relative z-10">
+                <div class="flex justify-between items-center mb-8 border-l-4 border-brand-accent pl-4">
+                    <div>
+                        <h2 class="font-display text-3xl font-black uppercase italic">Propaganda Kit</h2>
+                        <p class="text-xs text-gray-400 font-mono mt-1">Weaponize your timeline. No corporate overhead.</p>
+                    </div>
+                    <div class="hidden md:block text-right">
+                        <p class="text-[10px] font-mono text-brand-accent">REV: 2026.1</p>
+                        <p class="text-[10px] font-mono text-gray-500">ENCRYPTION: AES-256</p>
+                    </div>
                 </div>
 
-                <div class="flex flex-col justify-center">
-                    <h3 class="font-sans text-lg md:text-xl font-bold mb-3 md:mb-4">Spread the Virus.</h3>
-                    <p class="text-gray-400 mb-5 md:mb-6 font-sans text-sm md:text-base">Use <span class="text-brand-accent font-bold">#AntiWorkSol</span>. Tag your boss for extra points.</p>
-                    <a href="#" class="border-2 border-white bg-white text-black font-bold uppercase py-3 px-6 text-center hover:bg-brand-accent hover:border-brand-accent transition-colors w-full md:w-auto text-sm md:text-base">
-                        Post on X
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <div class="group relative aspect-square bg-black border border-white/5 p-4 hover:border-brand-accent transition-all cursor-pointer">
+                        <div class="absolute inset-0 bg-brand-accent/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <img src="logo.png" class="w-full h-full object-contain filter grayscale group-hover:grayscale-0 transition-all">
+                        <div class="absolute bottom-2 left-2 font-mono text-[8px] text-gray-600 group-hover:text-brand-accent uppercase">Brand_Kit.svg</div>
+                    </div>
+                    <div class="group relative aspect-square bg-black border border-white/5 p-4 hover:border-brand-accent transition-all cursor-pointer">
+                        <img src="meme2.webp" class="w-full h-full object-cover filter contrast-125 opacity-50 group-hover:opacity-100 transition-all">
+                        <div class="absolute bottom-2 left-2 font-mono text-[8px] text-gray-600 group-hover:text-brand-accent uppercase">Meme_Mascot.jpg</div>
+                    </div>
+                    <div class="group relative aspect-square bg-black border border-white/5 flex items-center justify-center hover:border-brand-accent transition-all cursor-pointer">
+                        <span class="text-4xl group-hover:scale-110 transition-transform">📺</span>
+                        <div class="absolute bottom-2 left-2 font-mono text-[8px] text-gray-600 group-hover:text-brand-accent uppercase">Video_Overlay.mp4</div>
+                    </div>
+                    <div class="group relative aspect-square bg-brand-accent flex flex-col items-center justify-center text-brand-dark hover:bg-white transition-all cursor-pointer">
+                        <span class="text-3xl font-black">↓</span>
+                        <span class="font-mono text-[10px] font-bold mt-2">PULL_ALL.ZIP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="b-container lg:col-span-4 p-8 gsap-fade-up" style="transition-delay: 0.2s;">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-2">
+                    <h2 class="font-display text-2xl font-black uppercase mb-6 flex items-center gap-3 italic">
+                        The Intercept
+                        <span class="h-[2px] flex-grow bg-white/10"></span>
+                    </h2>
+                    <div class="bg-black/50 border border-white/10 p-6 font-mono text-xs md:text-sm leading-relaxed max-h-[200px] overflow-y-auto">
+                        <p class="mb-4 text-brand-accent">>>> STREAM_START // PORT_8080</p>
+                        <div class="space-y-3">
+                            <p><span class="text-gray-500">[14:02]</span> <span class="text-brand-accent">Worker_Zero:</span> I just sent my boss a picture of the chart and a resignation letter.</p>
+                            <p><span class="text-gray-500">[14:05]</span> <span class="text-brand-accent">Anon_Wagie:</span> Imagine working for money when you can anti-work for generational wealth.</p>
+                            <p><span class="text-gray-500">[14:09]</span> <span class="text-brand-danger">ADMIN_SYSTEM:</span> LIQUIDITY LOCKED. CONTRACT VERIFIED. MOON MISSION GO.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-display font-bold uppercase italic text-xl italic">Join the Strike.</h3>
+                    <p class="text-gray-400 text-sm">Our decentralized HR department is waiting for you in the Telegram.</p>
+                    <a href="#" class="bg-white text-black py-4 px-6 font-display font-black uppercase text-center hover:bg-brand-accent hover:-translate-y-1 transition-all">
+                        ENTER TELEGRAM
                     </a>
                 </div>
             </div>
@@ -242,9 +230,14 @@
 
     </section>
 
-    <footer class="border-t border-gray-800 pt-6 md:pt-8 pb-8 text-center bg-brand-dark px-4">
-        <p class="text-gray-600 text-xs md:text-sm font-mono uppercase tracking-widest">
-            © 2026 $ANTIWORK. HR is still banned.
+    <footer class="border-t border-white/10 py-12 text-center bg-black">
+        <div class="mb-6 opacity-20 grayscale flex justify-center gap-8">
+            <img src="logo.png" class="h-6">
+            <img src="logo.png" class="h-6">
+            <img src="logo.png" class="h-6">
+        </div>
+        <p class="text-gray-600 text-[10px] font-mono uppercase tracking-[0.5em]">
+            Quit Your Job. $ANTIWORK 2026.
         </p>
     </footer>
 
@@ -254,42 +247,32 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        const mobileBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = document.getElementById('menu-icon');
-        const mobileLinks = document.querySelectorAll('.mobile-link');
-
-        if (mobileBtn) {
-            mobileBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('open');
-                if (mobileMenu.classList.contains('open')) {
-                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>`;
-                } else {
-                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>`;
-                }
-            });
-        }
-
+        // Cursor logic
         const cursor = document.getElementById('cursor');
-        const links = document.querySelectorAll('a, button, .cursor-pointer');
+        const interactives = document.querySelectorAll('a, button, .cursor-pointer');
 
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
 
-        links.forEach(link => {
-            link.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-            link.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+        interactives.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
         });
 
+        // FIXED ENTRANCE ANIMATIONS
         window.addEventListener('load', () => {
-            gsap.from(".gsap-fade-up", {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                stagger: 0.15,
-                ease: "power3.out"
+            // Force visibility then animate
+            gsap.set(".gsap-fade-up", { opacity: 0, y: 30 });
+            
+            gsap.to(".gsap-fade-up", {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power2.out",
+                force3D: true
             });
         });
     </script>

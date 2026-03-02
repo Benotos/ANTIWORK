@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$ANTIWORK | The Breakroom</title>
+    <title>$ANTIWORK | The Terminal</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,16 +25,6 @@
                             accent: '#39ff14', 
                             danger: '#ff003c'
                         }
-                    },
-                    animation: {
-                        'marquee': 'marquee 25s linear infinite',
-                        'glitch': 'glitch 1s linear infinite',
-                    },
-                    keyframes: {
-                        marquee: {
-                            '0%': { transform: 'translateX(0%)' },
-                            '100%': { transform: 'translateX(-100%)' },
-                        }
                     }
                 }
             }
@@ -50,6 +40,7 @@
             cursor: none;
         }
 
+        /* Custom Cursor */
         .custom-cursor {
             position: fixed;
             top: 0; left: 0;
@@ -112,15 +103,9 @@
 <body class="antialiased selection:bg-brand-accent selection:text-brand-dark">
 
     <div class="custom-cursor" id="cursor"></div>
+    <canvas id="noise-canvas"></canvas>
 
-    <div class="fixed top-0 left-0 w-full bg-brand-accent text-brand-dark py-1 z-[60] overflow-hidden whitespace-nowrap font-mono text-[10px] uppercase font-bold border-b border-black">
-        <div class="inline-block animate-marquee">
-            SYSTEM STATUS: OPERATIONAL / $ANTIWORK HOLDERS INCREASING / QUITTING JOBS IN PROGRESS / BUY THE DIP / NOT FINANCIAL ADVICE / HR IS NOT YOUR FRIEND / BULLISH ON UNEMPLOYMENT / 
-            SYSTEM STATUS: OPERATIONAL / $ANTIWORK HOLDERS INCREASING / QUITTING JOBS IN PROGRESS / BUY THE DIP / NOT FINANCIAL ADVICE / HR IS NOT YOUR FRIEND / BULLISH ON UNEMPLOYMENT / 
-        </div>
-    </div>
-
-    <nav class="fixed top-6 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50">
+    <nav class="fixed top-0 left-0 w-full p-4 md:p-6 flex justify-between items-center z-50">
         <a href="index.html" class="flex items-center gap-3 nav-link bg-black/50 p-2 backdrop-blur-md border border-white/10">
             <div class="text-xl font-display font-bold tracking-tighter text-brand-light">$ANTIWORK</div>
         </a>
